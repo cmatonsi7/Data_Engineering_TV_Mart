@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.DS_Store
+tv_shows_dw/target/
+tv_shows_dw/logs/
+tv_shows_dw/dbt_packages/
+get-pip.py
+explore_duplicates.py

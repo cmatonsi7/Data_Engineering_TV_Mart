@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: fct_shows
+    description: >
+      Fact table containing one row per TV show with all measurable attributes.
+      Built from stg_shows with an additional years_on_air derived column.
+      This is the primary table for show-level analysis — ratings, runtime,
+      popularity, and scheduling information.
+    columns:
+      - name: show_id
+        description: "Primary key. Unique identifier for each show."
+        tests:
+          - unique
+          - not_null
+
+      - name: years_on_air
+        description: >
+          Number of years the show has been or was on air.
+          Calculated from premiere_date to end_date for ended shows,
+          or from premiere_date to today for currently airing shows.
+
+      - name: avg_rating
+        description: "Average audience rating out of 10. Null if the show has no ratings yet."
+
+      - name: is_currently_airing
+        description: "TRUE if the show is currently airing, FALSE otherwise."
+
+  - name: dim_networks
+    description: >
+      Dimension table containing one row per network per country with aggregated
+      statistics across all their shows. Note: the same network name can exist in
+      multiple countries (e.g. HBO US and HBO Chile are separate entities).
+      The natural key is the combination of network_name + network_country.
+      Web-only shows with no network are excluded.
+    columns:
+      - name: network_name
+        description: "Name of the broadcast network. Not unique alone — combine with network_country for uniqueness."
+        tests:
+          - not_null
+
+      - name: network_country
+        description: "Country the network operates in. Combined with network_name forms the unique key."
+        tests:
+          - not_null
+
+      - name: total_shows
+        description: "Total number of shows on this network in the dataset."
+
+      - name: shows_currently_airing
+        description: "Number of shows on this network currently airing."
+
+      - name: avg_show_rating
+        description: "Average rating across all shows on this network. Rounded to 2 decimal places."
+
+      - name: highest_rated_show
+        description: "The highest individual show rating on this network."
+
+      - name: primary_language
+        description: "The most common language among shows on this network."

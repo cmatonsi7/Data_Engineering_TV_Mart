@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: stg_shows
+    description: >
+      Staged and cleaned TV show data sourced from the TVMaze public API.
+      Each row represents one unique TV show. Raw nested JSON fields have been
+      flattened, columns renamed for consistency, and a derived is_currently_airing
+      flag added. Null show_id and show_name rows are excluded.
+    columns:
+      - name: show_id
+        description: "Unique numeric identifier for the show as assigned by TVMaze."
+        tests:
+          - unique
+          - not_null
+
+      - name: show_name
+        description: "The full title of the TV show."
+        tests:
+          - not_null
+
+      - name: show_type
+        description: "Format of the show e.g. Scripted, Reality, Animation, Documentary."
+
+      - name: language
+        description: "Primary language the show is produced in."
+        tests:
+          - not_null
+
+      - name: genres
+        description: "Comma-separated list of genres e.g. Drama,Crime,Thriller."
+
+      - name: status
+        description: "Current airing status of the show."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Running', 'Ended', 'To Be Determined', 'In Development']
+
+      - name: premiere_date
+        description: "Date the show first aired."
+
+      - name: end_date
+        description: "Date the show ended. Null if still airing."
+
+      - name: is_currently_airing
+        description: "Boolean flag. TRUE if status is Running, FALSE otherwise."
+
+      - name: avg_rating
+        description: "Average audience rating out of 10 as reported by TVMaze. Null if unrated."
+
+      - name: runtime_minutes
+        description: "Standard episode runtime in minutes."
+
+      - name: avg_runtime_minutes
+        description: "Average actual episode runtime in minutes."
+
+      - name: popularity_weight
+        description: "TVMaze internal popularity score. Higher means more popular."
+
+      - name: network_name
+        description: "Name of the broadcast network. Null for web-only shows."
+
+      - name: network_country
+        description: "Country the network is based in."
+
+      - name: schedule_time
+        description: "Time the show airs e.g. 22:00."
+
+      - name: schedule_days
+        description: "Comma-separated days the show airs e.g. Monday,Tuesday."
+
+      - name: show_url
+        description: "Full URL to the show's TVMaze page."
+
+      - name: image_url
+        description: "URL to the show's medium-sized poster image."
+
+      - name: imdb_id
+        description: "The show's IMDB identifier e.g. tt1553656."
