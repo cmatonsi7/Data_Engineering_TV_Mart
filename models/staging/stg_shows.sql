@@ -33,7 +33,7 @@ cleaned AS (
         ended                                   AS end_date,
 
         -- A derived column: is the show currently airing?
-        -- CASE WHEN is SQL's version of an if/else statement
+   
         CASE 
             WHEN status = 'Running' THEN TRUE 
             ELSE FALSE 
